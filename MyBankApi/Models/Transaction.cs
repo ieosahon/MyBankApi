@@ -10,7 +10,7 @@ namespace MyBankApi.Models
         [Key]
         public int Id { get; set; }
         public string TransactionUniqueReference { get; set; }
-        public string TransactionAmount { get; set; }
+        public decimal TransactionAmount { get; set; }
         public TranStatus TransactionStatus { get; set; }
         public bool IsSuccessful => TransactionStatus.Equals(TranStatus.Successful);
         public string SourceAccount { get; set; }
@@ -21,7 +21,7 @@ namespace MyBankApi.Models
 
         public Transaction()
         {
-            TransactionUniqueReference = $"{Guid.NewGuid().ToString().Replace("-", "")}";
+            TransactionUniqueReference = $"{Guid.NewGuid().ToString().Replace("-", "").Substring(1, 27)}";
         }   
     }
     public enum TranStatus
