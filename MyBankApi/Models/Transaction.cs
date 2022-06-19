@@ -21,7 +21,7 @@ namespace MyBankApi.Models
 
         public Transaction()
         {
-            TransactionUniqueReference = $"{Guid.NewGuid().ToString().Replace("-", "")}";
+            TransactionUniqueReference = $"{Guid.NewGuid().ToString().Replace("-", "").Substring(1, 27)}";
         }   
     }
     public enum TranStatus
