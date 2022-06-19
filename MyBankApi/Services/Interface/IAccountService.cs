@@ -9,8 +9,8 @@ namespace MyBankApi.Services.Interface
         IEnumerable<Account> GetAllAccounts();
         Account Create(Account account, string Pin, string ConfirmPin);
         void Update(Account account, string Pin = null);
-        void Delete(Account account);
+        void Delete(int Id);
         Account GetAccountById(int Id);
-        Account GetAccountByNumber(string AccountNumber);
+        Account GetByAccountNumber(string AccountNumber);
     }
 }
