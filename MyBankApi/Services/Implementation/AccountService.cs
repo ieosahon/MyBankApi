@@ -90,8 +90,7 @@ namespace MyBankApi.Services.Implementation
             {
                 if (Pin != null)
                 {
-                    byte[] pinHash, pinSalt;
-                    Utility.CreatePinHash(Pin, out pinHash, out pinSalt);
+                    Utility.CreatePinHash(Pin, out byte[] pinHash, out byte[] pinSalt);
                     myAccount.PinHash = pinHash;
                     myAccount.PinSalt = pinSalt;
                 }
