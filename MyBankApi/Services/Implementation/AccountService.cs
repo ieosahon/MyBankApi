@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using MyBankApi.Validations;
+using MyBankApi.Utilities;
 
 namespace MyBankApi.Services.Implementation
 {
@@ -24,26 +26,10 @@ namespace MyBankApi.Services.Implementation
             if (acc == null) throw new ApplicationException("Account does not exist");
 
             // Verify PinHash
-            if (!VerifyPinHash(Pin, acc.PinHash, acc.PinSalt)) throw new ApplicationException("Invalid Pin");
+            if (!Validation.VerifyPinHash(Pin, acc.PinHash, acc.PinSalt)) throw new ApplicationException("Invalid Pin");
             return acc;
         }
-
-        // move to a different class later
-        private static bool VerifyPinHash(string pin, byte[] pinHash, byte[] pinSalt)
-        {
-            if (string.IsNullOrEmpty(pin)) throw new ArgumentNullException(nameof(pin));
-           
-            // pin verification
-            using (var hmac = new HMACSHA512(pinSalt))
-            {
-                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pin));
-                for (int i = 0; i < computedHash.Length; i++)
-                {
-                    if (computedHash[i] != pinHash[i]) return false;
-                }
-            }
-            return true;
-        }
+        
 
         public Account Create(Account account, string Pin, string ConfirmPin)
         {
@@ -55,7 +41,7 @@ namespace MyBankApi.Services.Implementation
 
             // hashing/encrypting pin
             byte[] pinHash, pinSalt;
-            CreatePinHash(Pin, out pinHash, out pinSalt);
+            Utility.CreatePinHash(Pin, out pinHash, out pinSalt);
             account.PinHash = pinHash;
             account.PinSalt = pinSalt;
             
@@ -66,14 +52,7 @@ namespace MyBankApi.Services.Implementation
             
         }
         // move to a different class later
-        private static void CreatePinHash(string pin, out byte[] pinHash, out byte[] pinSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                pinSalt = hmac.Key;
-                pinHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(pin));
-            }
-        }
+       
 
         public void Delete(int Id)
         {
@@ -111,8 +90,7 @@ namespace MyBankApi.Services.Implementation
             {
                 if (Pin != null)
                 {
-                    byte[] pinHash, pinSalt;
-                    CreatePinHash(Pin, out pinHash, out pinSalt);
+                    Utility.CreatePinHash(Pin, out byte[] pinHash, out byte[] pinSalt);
                     myAccount.PinHash = pinHash;
                     myAccount.PinSalt = pinSalt;
                 }

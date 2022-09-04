@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MyBankApi.DAL;
+using MyBankApi.MiddleWares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,6 +49,8 @@ namespace MyBankApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MyBankApi v1"));
             }
+
+            app.UseMiddleware<CustomErrorExecption> ();
 
             app.UseHttpsRedirection();
 
