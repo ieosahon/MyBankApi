@@ -84,15 +84,23 @@ namespace MyBankApi.Services.Implementation
             if (myAccount == null) throw new ApplicationException("Account does not exist");
             if (myAccount != null)
             {
-                if (Pin != null)
+                if (!string.IsNullOrWhiteSpace(Pin))
                 {
                     Utility.CreatePinHash(Pin, out byte[] pinHash, out byte[] pinSalt);
                     myAccount.PinHash = pinHash;
                     myAccount.PinSalt = pinSalt;
                 }
-                _bankAppDbContext.Accounts.Update(myAccount);
-                _bankAppDbContext.SaveChanges();
+
+                // to update phone number
+                if (!string.IsNullOrWhiteSpace(account.PhoneNumber))
+                {
+                    myAccount.PhoneNumber = account.PhoneNumber;
+                }
+               
             }
+
+            _bankAppDbContext.Accounts.Update(myAccount);
+            _bankAppDbContext.SaveChanges();
         }
     }
 }
