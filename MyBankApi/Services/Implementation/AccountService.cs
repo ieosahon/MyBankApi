@@ -42,8 +42,10 @@ namespace MyBankApi.Services.Implementation
             Utility.CreatePinHash(Pin, out pinHash, out pinSalt);
             account.PinHash = pinHash;
             account.PinSalt = pinSalt;
-            
+
             // create the new account
+
+            account.DateCreated = DateTime.Now;
             _bankAppDbContext.Accounts.Add(account);
                 _bankAppDbContext.SaveChanges();
                 return account;
@@ -99,6 +101,7 @@ namespace MyBankApi.Services.Implementation
                
             }
 
+            account.DateLastUpdated = DateTime.Now;
             _bankAppDbContext.Accounts.Update(myAccount);
             _bankAppDbContext.SaveChanges();
         }
