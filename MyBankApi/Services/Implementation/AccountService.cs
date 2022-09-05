@@ -42,8 +42,10 @@ namespace MyBankApi.Services.Implementation
             Utility.CreatePinHash(Pin, out pinHash, out pinSalt);
             account.PinHash = pinHash;
             account.PinSalt = pinSalt;
-            
+
             // create the new account
+
+            account.DateCreated = DateTime.Now;
             _bankAppDbContext.Accounts.Add(account);
                 _bankAppDbContext.SaveChanges();
                 return account;
@@ -84,15 +86,24 @@ namespace MyBankApi.Services.Implementation
             if (myAccount == null) throw new ApplicationException("Account does not exist");
             if (myAccount != null)
             {
-                if (Pin != null)
+                if (!string.IsNullOrWhiteSpace(Pin))
                 {
                     Utility.CreatePinHash(Pin, out byte[] pinHash, out byte[] pinSalt);
                     myAccount.PinHash = pinHash;
                     myAccount.PinSalt = pinSalt;
                 }
-                _bankAppDbContext.Accounts.Update(myAccount);
-                _bankAppDbContext.SaveChanges();
+
+                // to update phone number
+                if (!string.IsNullOrWhiteSpace(account.PhoneNumber))
+                {
+                    myAccount.PhoneNumber = account.PhoneNumber;
+                }
+               
             }
+
+            account.DateLastUpdated = DateTime.Now;
+            _bankAppDbContext.Accounts.Update(myAccount);
+            _bankAppDbContext.SaveChanges();
         }
     }
 }
