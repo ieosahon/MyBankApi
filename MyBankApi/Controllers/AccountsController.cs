@@ -111,7 +111,13 @@ namespace MyBankApi.Controllers
         [HttpPut("update-account")]
         public IActionResult UpdateAccount([FromBody] AccountUpdateDto accountUpdateDto)
         {
-            var account = _account.GetAccountById(accountUpdateDto.Id);
+            var account = _mapper.Map<Account>(accountUpdateDto);
+            if (account != null)
+            {
+                _account.Update(account, accountUpdateDto.Pin);
+                return Ok(account);
+            }
+            return NotFound(account);
         }
     }
 }
