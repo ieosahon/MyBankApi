@@ -8,8 +8,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MyBankApi.AutoMapperProfiles;
 using MyBankApi.DAL;
 using MyBankApi.MiddleWares;
+using MyBankApi.Services.Implementation;
+using MyBankApi.Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +34,10 @@ namespace MyBankApi
         {
             // Registered Db Context class
             services.AddDbContext<BankAppDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Bank")));
+
+            services.AddScoped<IAccountService, AccountService>();
+
+            services.AddAutoMapper(typeof(AutoMapperProfile));
 
 
             services.AddControllers();
