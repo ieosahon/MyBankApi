@@ -82,7 +82,7 @@ namespace MyBankApi.Services.Implementation
 
         public void Update(Account account, string Pin = null)
         {
-            var myAccount = _bankAppDbContext.Accounts.Where(x => x.AccountNumberGenerated == account.AccountNumberGenerated).SingleOrDefault();
+            var myAccount = _bankAppDbContext.Accounts.Where(x => x.Id == account.Id).SingleOrDefault();
             if (myAccount == null) throw new ApplicationException("Account does not exist");
             if (myAccount != null)
             {

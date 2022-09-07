@@ -39,6 +39,8 @@ namespace MyBankApi
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
+            //]services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

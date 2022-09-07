@@ -15,7 +15,7 @@ namespace MyBankApi.Controllers
     {
 
         private readonly IAccountService _account;
-        private readonly Mapper _mapper;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// inject account service interface and mapper in the "Account Controller" constructor
@@ -23,7 +23,7 @@ namespace MyBankApi.Controllers
         /// <param name="account"></param>
         /// <param name="mapper"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public AccountsController(IAccountService account, Mapper mapper)
+        public AccountsController(IAccountService account, IMapper mapper)
         {
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
@@ -39,7 +39,7 @@ namespace MyBankApi.Controllers
             // map Account to newAccountDto
             var account = _mapper.Map<Account>(newAccountDto);
             var accountCreated = _account.Create(account, newAccountDto.Pin, newAccountDto.ConfirmPin);
-            return Ok(accountCreated);
+            return Ok(account);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -116,6 +116,23 @@ namespace MyBankApi.Controllers
             {
                 _account.Update(account, accountUpdateDto.Pin);
                 return Ok(account);
+            }
+            return NotFound(account);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+
+        [HttpDelete("delete-account-by-id")]
+        public IActionResult DeleteAcountById(int id)
+        {
+            var account = _account.GetAccountById(id);
+            if (account != null)
+            {
+                _account.Delete(id);
+                return Ok();
             }
             return NotFound(account);
         }
